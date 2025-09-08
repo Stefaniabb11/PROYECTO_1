@@ -1,4 +1,51 @@
-pandas
-numpy
-matplotlib
-plotly
+fig1 = px.line(data, x= "ANIO",
+               y= "PIB", title= "PIB (2010 - 2014)",
+               labels = {"ANIO" : "Año", "PIB" : "PIB"},
+               markers= True)
+fig1.update_layout( xaxis= dict(dtick=1), hovermode="x unified",
+                  template= "plotly_white")
+
+st.plotly_chart(fig1, use_container_width=True)
+
+
+fig2 = px.line(data, x= "ANIO",
+               y= "DESEMPLEO", title= "DESEMPLEO (2010 - 2014)",
+               labels = {"ANIO" : "Año", "DESEMPLEO" : "Desempleo"},
+               markers= True)
+fig2.update_layout( xaxis= dict(dtick=1), hovermode="x unified",
+                  template= "plotly_white")
+st.plotly_chart(fig2, use_container_width=True)
+
+fig3 = px.line(data, x= "ANIO",
+               y= "INFLACION", title= "INFLACIÓN (2010 - 2014)",
+               labels = {"ANIO" : "Año", "INFLACION" : "Inflación"},
+               markers= True)
+fig3.update_layout( xaxis= dict(dtick=1), hovermode="x unified",
+                  template= "plotly_white")
+st.plotly_chart(fig3, use_container_width=True)
+
+
+
+
+if not seleccion:
+    st.warning("Por favor selecciona al menos una variable.")
+else:
+    data_long = data.melt(
+        id_vars=["ANIO"],
+        value_vars=seleccion,
+        var_name="Variable",
+        value_name="Valor")
+    data_long["Valor"] = pd.to_numeric(data_long["Valor"], errors="coerce")
+    fig = px.line(
+        data_long,
+        x="ANIO",
+        y="Valor",
+        color="Variable",
+        markers=True,
+        title="Evolución de las variables seleccionadas",
+        labels={"ANIO": "Año", "Valor": "Valor", "Variable": "Variable"})
+    fig.update_layout(
+        hovermode='x unified',
+        template='plotly_white',
+        xaxis=dict(dtick=1))
+    st.plotly_chart(fig, use_container_width=True)
